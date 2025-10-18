@@ -1,0 +1,4 @@
+project_id = "zlxbllfrlveeikxmmust"
+
+[functions.analyze-sustainability]
+verify_jwt = false
