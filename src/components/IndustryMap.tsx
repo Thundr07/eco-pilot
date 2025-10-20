@@ -1,27 +1,25 @@
 import { useEffect } from 'react';
 import { MapContainer, TileLayer, Circle, Popup, useMap } from 'react-leaflet';
+import type { CircleMarkerProps } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import type { LatLngExpression } from 'leaflet';
 
-// Sample pollution and industry-friendly zones data
 const pollutionZones = [
-  { id: 1, name: 'High Pollution Zone A', coords: [13.0827, 80.2707] as LatLngExpression, radius: 3000, pollution: 'high' },
-  { id: 2, name: 'Moderate Pollution Zone B', coords: [13.0674, 80.1863] as LatLngExpression, radius: 2500, pollution: 'moderate' },
-  { id: 3, name: 'High Pollution Zone C', coords: [13.1000, 80.1500] as LatLngExpression, radius: 2000, pollution: 'high' },
+  { id: 1, name: 'High Pollution Zone A', lat: 13.0827, lng: 80.2707, radius: 3000, pollution: 'high' },
+  { id: 2, name: 'Moderate Pollution Zone B', lat: 13.0674, lng: 80.1863, radius: 2500, pollution: 'moderate' },
+  { id: 3, name: 'High Pollution Zone C', lat: 13.1000, lng: 80.1500, radius: 2000, pollution: 'high' },
 ];
 
 const industryFriendlyZones = [
-  { id: 1, name: 'Industrial Park Zone 1', coords: [13.1181, 80.2365] as LatLngExpression, radius: 2000, suitable: true },
-  { id: 2, name: 'Green Industrial Zone 2', coords: [13.0500, 80.2500] as LatLngExpression, radius: 2500, suitable: true },
-  { id: 3, name: 'Sustainable Industry Zone 3', coords: [13.0900, 80.2900] as LatLngExpression, radius: 1800, suitable: true },
+  { id: 1, name: 'Industrial Park Zone 1', lat: 13.1181, lng: 80.2365, radius: 2000, suitable: true },
+  { id: 2, name: 'Green Industrial Zone 2', lat: 13.0500, lng: 80.2500, radius: 2500, suitable: true },
+  { id: 3, name: 'Sustainable Industry Zone 3', lat: 13.0900, lng: 80.2900, radius: 1800, suitable: true },
 ];
 
 const MapController = () => {
   const map = useMap();
   
   useEffect(() => {
-    // Fix for default marker icon
     delete (L.Icon.Default.prototype as any)._getIconUrl;
     L.Icon.Default.mergeOptions({
       iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -29,76 +27,73 @@ const MapController = () => {
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
     });
     
-    map.invalidateSize();
+    setTimeout(() => {
+      map.invalidateSize();
+    }, 100);
   }, [map]);
   
   return null;
 };
 
 const IndustryMap = () => {
-  const mapCenter: LatLngExpression = [13.0827, 80.2707];
-  
   return (
     <div className="w-full h-[500px] rounded-lg overflow-hidden border-2 border-border shadow-lg">
       <MapContainer
-        // @ts-ignore - MapContainer props typing issue
-        center={mapCenter}
+        center={[13.0827, 80.2707]}
         zoom={11}
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={false}
       >
         <MapController />
         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        
-        {/* Pollution zones - Red circles */}
-        {pollutionZones.map((zone) => (
-          <Circle
-            key={`pollution-${zone.id}`}
-            // @ts-ignore - Circle props typing issue
-            center={zone.coords}
-            // @ts-ignore
-            radius={zone.radius}
-            pathOptions={{
-              color: zone.pollution === 'high' ? '#ef4444' : '#f97316',
-              fillColor: zone.pollution === 'high' ? '#ef4444' : '#f97316',
-              fillOpacity: 0.3,
-            }}
-          >
-            <Popup>
-              <div className="text-sm">
-                <strong>{zone.name}</strong>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {zone.pollution === 'high' ? '⚠️ High Pollution' : '⚠️ Moderate Pollution'}
-                </p>
-                <p className="text-xs mt-1">Not recommended for new industries</p>
-              </div>
-            </Popup>
-          </Circle>
-        ))}
-        
-        {/* Industry-friendly zones - Green circles */}
-        {industryFriendlyZones.map((zone) => (
-          <Circle
-            key={`industry-${zone.id}`}
-            // @ts-ignore - Circle props typing issue
-            center={zone.coords}
-            // @ts-ignore
-            radius={zone.radius}
-            pathOptions={{
-              color: '#10b981',
-              fillColor: '#10b981',
-              fillOpacity: 0.3,
-            }}
-          >
-            <Popup>
-              <div className="text-sm">
-                <strong>{zone.name}</strong>
-                <p className="text-xs text-muted-foreground mt-1">✓ Suitable for Industries</p>
-                <p className="text-xs mt-1">Low pollution, good infrastructure</p>
-              </div>
-            </Popup>
-          </Circle>
-        ))}
+        {pollutionZones.map((zone) => {
+          const center: [number, number] = [zone.lat, zone.lng];
+          return (
+            <Circle
+              key={`pollution-${zone.id}`}
+              center={center}
+              radius={zone.radius}
+              pathOptions={{
+                color: zone.pollution === 'high' ? '#ef4444' : '#f97316',
+                fillColor: zone.pollution === 'high' ? '#ef4444' : '#f97316',
+                fillOpacity: 0.3,
+              }}
+            >
+              <Popup>
+                <div className="text-sm">
+                  <strong>{zone.name}</strong>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {zone.pollution === 'high' ? '⚠️ High Pollution' : '⚠️ Moderate Pollution'}
+                  </p>
+                  <p className="text-xs mt-1">Not recommended for new industries</p>
+                </div>
+              </Popup>
+            </Circle>
+          );
+        })}
+        {industryFriendlyZones.map((zone) => {
+          const center: [number, number] = [zone.lat, zone.lng];
+          return (
+            <Circle
+              key={`industry-${zone.id}`}
+              center={center}
+              radius={zone.radius}
+              pathOptions={{
+                color: '#10b981',
+                fillColor: '#10b981',
+                fillOpacity: 0.3,
+              }}
+            >
+              <Popup>
+                <div className="text-sm">
+                  <strong>{zone.name}</strong>
+                  <p className="text-xs text-muted-foreground mt-1">✓ Suitable for Industries</p>
+                  <p className="text-xs mt-1">Low pollution, good infrastructure</p>
+                </div>
+              </Popup>
+            </Circle>
+          );
+        })}
       </MapContainer>
       
       <div className="bg-card p-4 border-t">
