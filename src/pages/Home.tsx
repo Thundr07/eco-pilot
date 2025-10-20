@@ -1,10 +1,16 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Leaf, Brain, TrendingUp, Users, Sparkles, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import IndustryMap from "@/components/IndustryMap";
+import IndustryMetricsForm from "@/components/IndustryMetricsForm";
+import IndustryResults from "@/components/IndustryResults";
 const Home = () => {
+  const [industryResults, setIndustryResults] = useState<any>(null);
+  
   const features = [{
     icon: Brain,
     title: "AI-Powered Analysis",
@@ -82,6 +88,26 @@ const Home = () => {
                   <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </CardContent>
               </Card>)}
+          </div>
+        </div>
+      </section>
+
+      {/* Industry Analysis Section */}
+      <section className="py-20 px-4 bg-background">
+        <div className="container mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Industry Sustainability Analysis
+            </h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Evaluate industrial projects with AI-powered environmental impact assessment
+            </p>
+          </div>
+          
+          <div className="space-y-8">
+            <IndustryMap />
+            <IndustryMetricsForm onResultsReceived={setIndustryResults} />
+            {industryResults && <IndustryResults results={industryResults} />}
           </div>
         </div>
       </section>

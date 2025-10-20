@@ -2,3 +2,6 @@ project_id = "zlxbllfrlveeikxmmust"
 
 [functions.analyze-sustainability]
 verify_jwt = false
+
+[functions.evaluate-industry]
+verify_jwt = false
