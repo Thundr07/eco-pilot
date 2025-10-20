@@ -9,6 +9,7 @@ import AIInsights from "./pages/AIInsights";
 import Dashboard from "./pages/Dashboard";
 import Team from "./pages/Team";
 import Auth from "./pages/Auth";
+import MapView from "./pages/MapView";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/insights" element={<AIInsights />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/team" element={<Team />} />
+          <Route path="/map" element={<MapView />} />
           <Route path="/auth" element={<Auth />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
