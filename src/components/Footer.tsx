@@ -1,8 +1,6 @@
 import { Leaf } from "lucide-react";
-
 const Footer = () => {
-  return (
-    <footer className="bg-muted/50 border-t border-border mt-20">
+  return <footer className="bg-muted/50 border-t border-border mt-20">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
@@ -11,7 +9,7 @@ const Footer = () => {
           </div>
           
           <div className="text-sm text-muted-foreground text-center">
-            <p>HackXtreme'25 Submission</p>
+            
             <p className="mt-1">K. Ramakrishnan College of Engineering</p>
           </div>
           
@@ -20,8 +18,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;

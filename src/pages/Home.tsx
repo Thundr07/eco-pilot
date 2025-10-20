@@ -4,33 +4,25 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Leaf, Brain, TrendingUp, Users, Sparkles, ArrowRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
 const Home = () => {
-  const features = [
-    {
-      icon: Brain,
-      title: "AI-Powered Analysis",
-      description: "Advanced machine learning algorithms analyze your lifestyle patterns"
-    },
-    {
-      icon: TrendingUp,
-      title: "Personalized Insights",
-      description: "Get custom recommendations based on your unique data"
-    },
-    {
-      icon: Leaf,
-      title: "Eco-Friendly Tips",
-      description: "Practical, actionable steps to reduce your carbon footprint"
-    },
-    {
-      icon: Sparkles,
-      title: "Real-Time Results",
-      description: "Instant analysis and visual feedback on your impact"
-    }
-  ];
-
-  return (
-    <div className="min-h-screen bg-background">
+  const features = [{
+    icon: Brain,
+    title: "AI-Powered Analysis",
+    description: "Advanced machine learning algorithms analyze your lifestyle patterns"
+  }, {
+    icon: TrendingUp,
+    title: "Personalized Insights",
+    description: "Get custom recommendations based on your unique data"
+  }, {
+    icon: Leaf,
+    title: "Eco-Friendly Tips",
+    description: "Practical, actionable steps to reduce your carbon footprint"
+  }, {
+    icon: Sparkles,
+    title: "Real-Time Results",
+    description: "Instant analysis and visual feedback on your impact"
+  }];
+  return <div className="min-h-screen bg-background">
       <Navbar />
       
       {/* Hero Section */}
@@ -81,8 +73,7 @@ const Home = () => {
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <Card key={index} className="border-2 hover:shadow-lg transition-all hover:-translate-y-1">
+            {features.map((feature, index) => <Card key={index} className="border-2 hover:shadow-lg transition-all hover:-translate-y-1">
                 <CardContent className="pt-6">
                   <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center mb-4">
                     <feature.icon className="w-6 h-6 text-primary-foreground" />
@@ -90,8 +81,7 @@ const Home = () => {
                   <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
                   <p className="text-sm text-muted-foreground">{feature.description}</p>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -105,9 +95,7 @@ const Home = () => {
               <h2 className="text-3xl md:text-4xl font-bold mb-4">
                 Ready to Make a Difference?
               </h2>
-              <p className="text-lg mb-8 opacity-90 max-w-2xl mx-auto">
-                Join thousands making smarter, greener choices every day
-              </p>
+              <p className="text-lg mb-8 opacity-90 max-w-2xl mx-auto">Making smarter, greener choices every day</p>
               <Link to="/insights">
                 <Button size="lg" variant="secondary" className="font-semibold">
                   Get Started Free
@@ -119,8 +107,6 @@ const Home = () => {
       </section>
 
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Home;
