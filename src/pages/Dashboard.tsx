@@ -8,6 +8,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, TrendingUp, Droplet, Trash2, Car, Leaf, LogOut } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
+import { Card as UICard, CardHeader as UICardHeader, CardTitle as UICardTitle, CardContent as UICardContent } from "@/components/ui/card";
+import { Factory, Leaf, Cloud, Droplet } from "lucide-react";
+import { api } from "@/lib/utils";
 
 interface Assessment {
   id: string;
@@ -28,6 +31,7 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [assessments, setAssessments] = useState<Assessment[]>([]);
   const [selectedAssessment, setSelectedAssessment] = useState<Assessment | null>(null);
+  const [cityCards, setCityCards] = useState<any[]>([]);
 
   useEffect(() => {
     checkAuth();
@@ -73,6 +77,30 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // Load Smart City Dashboard metrics
+    (async () => {
+      try {
+        const res = await api<any>("/citydata");
+        const insights: Record<string, string> = (res as any).insights || {};
+        const metrics = (res as any).data || [];
+        const cards = metrics.map((m: any) => ({
+          city: m.city,
+          items: [
+            { key: "CO₂ Emissions", value: m.co2, icon: Cloud },
+            { key: "AQI", value: m.aqi, icon: Factory },
+            { key: "Water Stress", value: m.water_stress, icon: Droplet },
+            { key: "Green Cover", value: m.green_cover + "%", icon: Leaf },
+          ],
+          insight: insights[m.city] || "",
+        }));
+        setCityCards(cards);
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  }, []);
 
   const handleDelete = async (id: string) => {
     try {
@@ -150,6 +178,37 @@ const Dashboard = () => {
           </Card>
         ) : (
           <div className="space-y-6">
+            {/* Smart City Dashboard */}
+            {cityCards.length > 0 && (
+              <div className="space-y-4">
+                <h2 className="text-2xl font-semibold">Smart City Dashboard</h2>
+                <div className="grid gap-4">
+                  {cityCards.map((c) => (
+                    <div key={c.city} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <h3 className="text-lg font-bold">{c.city}</h3>
+                        <span className="text-sm text-muted-foreground">{c.insight}</span>
+                      </div>
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        {c.items.map((it: any) => (
+                          <UICard key={it.key}>
+                            <UICardHeader className="pb-1">
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                                <it.icon className="w-4 h-4" />
+                                <span>{it.key}</span>
+                              </div>
+                            </UICardHeader>
+                            <UICardContent>
+                              <div className="text-2xl font-semibold">{it.value}</div>
+                            </UICardContent>
+                          </UICard>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
             {/* Score Overview */}
             {selectedAssessment && (
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
