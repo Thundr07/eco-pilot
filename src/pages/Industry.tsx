@@ -5,6 +5,10 @@ import IndustryMap from "@/components/IndustryMap";
 import IndustryMetricsForm from "@/components/IndustryMetricsForm";
 import IndustryResults from "@/components/IndustryResults";
 import { Card, CardContent } from "@/components/ui/card";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { api } from "@/lib/utils";
+import EcoChat from "@/components/EcoChat";
 import { Factory } from "lucide-react";
 
 // Chennai industry data with real locations
@@ -28,6 +32,25 @@ const chennaiIndustries = [
 
 const Industry = () => {
   const [industryResults, setIndustryResults] = useState<any>(null);
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatMessages, setChatMessages] = useState<{ role: string; content: string; created_at?: string }[]>([]);
+  const [draft, setDraft] = useState("");
+
+  const sendChat = async () => {
+    if (!draft.trim()) return;
+    try {
+      setChatLoading(true);
+      const res = await api<{ messages: { role: string; content: string; created_at?: string }[] }>(`/chat`, {
+        method: 'POST',
+        body: JSON.stringify({ user_id: 'anon', city: 'Chennai', industry: 'Textile', message: draft })
+      });
+      setChatMessages(res.messages);
+      setDraft("");
+    } finally {
+      setChatLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -85,6 +108,8 @@ const Industry = () => {
               <IndustryResults results={industryResults} />
             </div>
           )}
+          {/* EcoChat Assistant */}
+          <EcoChat userId="anon" city="Chennai" industry="Textile" />
         </div>
       </div>
 

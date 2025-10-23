@@ -4,6 +4,8 @@ import { Badge } from './ui/badge';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import { ChevronDown, Lightbulb, Heart } from 'lucide-react';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { api } from '@/lib/utils';
 
 interface IndustryResultsProps {
   results: any;
@@ -11,6 +13,8 @@ interface IndustryResultsProps {
 
 const IndustryResults = ({ results }: IndustryResultsProps) => {
   const [isPolicyOpen, setIsPolicyOpen] = useState(false);
+  const [compareSummary, setCompareSummary] = useState<string>("");
+  const [compareLoading, setCompareLoading] = useState(false);
   const [isNarrativeOpen, setIsNarrativeOpen] = useState(true);
   
   if (!results) return null;
@@ -48,6 +52,24 @@ const IndustryResults = ({ results }: IndustryResultsProps) => {
     if (score >= 75) return 'Highly Suitable';
     if (score >= 50) return 'Moderately Suitable';
     return 'Not Recommended';
+  };
+
+  const handleCompare = async () => {
+    try {
+      setCompareLoading(true);
+      const city = results?.inputData?.location || 'Chennai';
+      const a = results?.inputData?.industryType || 'Textile';
+      const b = a === 'Textile' ? 'Electronics' : 'Textile';
+      const res = await api<{ metrics: any; summary: string }>(`/compare`, {
+        method: 'POST',
+        body: JSON.stringify({ city, industry_a: a, industry_b: b }),
+      });
+      setCompareSummary(res.summary);
+    } catch (e) {
+      setCompareSummary('Comparison unavailable.');
+    } finally {
+      setCompareLoading(false);
+    }
   };
 
   return (
@@ -160,7 +182,12 @@ const IndustryResults = ({ results }: IndustryResultsProps) => {
       {/* Comparison Chart */}
       <Card>
         <CardHeader>
-          <CardTitle>Industry Comparison</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle>Industry Comparison</CardTitle>
+            <Button size="sm" onClick={handleCompare} disabled={compareLoading}>
+              {compareLoading ? 'Comparing…' : 'Compare with Peer'}
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={250}>
@@ -176,6 +203,9 @@ const IndustryResults = ({ results }: IndustryResultsProps) => {
               </Bar>
             </BarChart>
           </ResponsiveContainer>
+          {compareSummary && (
+            <div className="mt-3 text-sm text-muted-foreground">{compareSummary}</div>
+          )}
         </CardContent>
       </Card>
 
