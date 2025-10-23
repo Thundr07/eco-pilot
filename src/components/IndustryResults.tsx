@@ -1,12 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from 'recharts';
 import { Badge } from './ui/badge';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
+import { ChevronDown, Lightbulb, Heart } from 'lucide-react';
+import { useState } from 'react';
 
 interface IndustryResultsProps {
   results: any;
 }
 
 const IndustryResults = ({ results }: IndustryResultsProps) => {
+  const [isPolicyOpen, setIsPolicyOpen] = useState(false);
+  const [isNarrativeOpen, setIsNarrativeOpen] = useState(true);
+  
   if (!results) return null;
 
   const impactData = [
@@ -46,6 +52,34 @@ const IndustryResults = ({ results }: IndustryResultsProps) => {
 
   return (
     <div className="space-y-6">
+      {/* City Narrative - Emotional AI Interface */}
+      {results.cityNarrative && (
+        <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 to-background">
+          <Collapsible open={isNarrativeOpen} onOpenChange={setIsNarrativeOpen}>
+            <CollapsibleTrigger className="w-full">
+              <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors rounded-t-lg">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Heart className="w-6 h-6 text-primary" />
+                    <CardTitle className="text-left">The City Speaks</CardTitle>
+                  </div>
+                  <ChevronDown className={`w-5 h-5 transition-transform ${isNarrativeOpen ? 'rotate-180' : ''}`} />
+                </div>
+              </CardHeader>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <CardContent>
+                <div className="prose prose-sm max-w-none">
+                  <p className="text-lg italic text-foreground/90 leading-relaxed">
+                    {results.cityNarrative}
+                  </p>
+                </div>
+              </CardContent>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+      )}
+
       {/* Overall Score */}
       <Card>
         <CardHeader>
@@ -145,10 +179,43 @@ const IndustryResults = ({ results }: IndustryResultsProps) => {
         </CardContent>
       </Card>
 
+      {/* AI Policy Advisor - Generative Policy Designer */}
+      {results.policyRecommendations && (
+        <Card className="border-2 border-accent">
+          <Collapsible open={isPolicyOpen} onOpenChange={setIsPolicyOpen}>
+            <CollapsibleTrigger className="w-full">
+              <CardHeader className="cursor-pointer hover:bg-accent/50 transition-colors rounded-t-lg">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Lightbulb className="w-6 h-6 text-accent-foreground" />
+                    <CardTitle>AI Policy Advisor</CardTitle>
+                  </div>
+                  <ChevronDown className={`w-5 h-5 transition-transform ${isPolicyOpen ? 'rotate-180' : ''}`} />
+                </div>
+                <p className="text-sm text-muted-foreground text-left mt-1">
+                  Data-driven policy recommendations with cost-benefit analysis
+                </p>
+              </CardHeader>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="prose prose-sm max-w-none">
+                    <div className="whitespace-pre-wrap text-sm bg-muted/50 p-4 rounded-lg">
+                      {results.policyRecommendations}
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </CollapsibleContent>
+          </Collapsible>
+        </Card>
+      )}
+
       {/* AI Recommendations */}
       <Card>
         <CardHeader>
-          <CardTitle>AI-Powered Recommendations</CardTitle>
+          <CardTitle>Sustainability Recommendations</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="prose prose-sm max-w-none">

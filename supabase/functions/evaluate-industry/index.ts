@@ -30,6 +30,17 @@ serve(async (req) => {
 Consider industry type, location, emissions, waste, water usage, energy source, and employee count in your analysis.
 Be thorough and provide practical suggestions.`;
 
+    const policyPrompt = `As a policy advisor, generate 3-5 specific, actionable policy recommendations for this industry with cost-benefit analysis. Format each as:
+POLICY: [policy name]
+DESCRIPTION: [detailed description]
+ESTIMATED COST: [implementation cost]
+EXPECTED BENEFIT: [environmental/economic benefit]
+TIMELINE: [implementation timeline]
+
+Make recommendations practical and data-driven.`;
+
+    const narrativePrompt = `You are the city of Chennai speaking through AI. Based on this industry proposal, write a 2-3 sentence emotional, first-person narrative about how you feel and what you hope for. Be empathetic and engaging. Start with "I am Chennai..." Express concerns and hopes about the environmental impact.`;
+
     const userPrompt = `Analyze this proposed industry:
 - Industry Name: ${industryName}
 - Type: ${industryType}
@@ -51,6 +62,7 @@ Provide a structured response with:
 8. Final recommendation about location suitability
 9. Detailed recommendations for improvement`;
 
+    // Main evaluation
     const response = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -90,6 +102,44 @@ Provide a structured response with:
     const data = await response.json();
     const aiResponse = data.choices[0].message.content;
 
+    // Generate policy recommendations
+    const policyResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          { role: 'system', content: policyPrompt },
+          { role: 'user', content: userPrompt }
+        ],
+      }),
+    });
+
+    const policyData = await policyResponse.json();
+    const policyRecommendations = policyData.choices[0].message.content;
+
+    // Generate city narrative
+    const narrativeResponse = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${LOVABLE_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'google/gemini-2.5-flash',
+        messages: [
+          { role: 'system', content: narrativePrompt },
+          { role: 'user', content: `Industry: ${industryName}, Type: ${industryType}, Emissions: ${expectedEmissions} tons/year, Location: ${location}` }
+        ],
+      }),
+    });
+
+    const narrativeData = await narrativeResponse.json();
+    const cityNarrative = narrativeData.choices[0].message.content;
+
     console.log('AI Evaluation complete');
 
     // Parse scores from AI response
@@ -118,6 +168,8 @@ Provide a structured response with:
         innovationScore: innovationScoreMatch ? parseInt(innovationScoreMatch[1]) : 65,
         complianceScore: complianceScoreMatch ? parseInt(complianceScoreMatch[1]) : 85,
         recommendations: aiResponse,
+        policyRecommendations,
+        cityNarrative,
         pollutionProximity: 'Low - Safe distance from high pollution zones',
         infrastructure: 'Good - Adequate utilities and transport access',
         compliance: 'Meeting environmental standards',
