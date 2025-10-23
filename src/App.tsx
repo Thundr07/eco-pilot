@@ -9,6 +9,8 @@ import About from "./pages/About";
 import Team from "./pages/Team";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import AIInsights from "./pages/AIInsights";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +23,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/industry" element={<Industry />} />
+          <Route path="/insights" element={<AIInsights />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/about" element={<About />} />
           <Route path="/team" element={<Team />} />
           <Route path="/auth" element={<Auth />} />
