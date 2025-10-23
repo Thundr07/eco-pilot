@@ -5,16 +5,16 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <Leaf className="w-5 h-5 text-primary" />
-            <span className="text-sm font-semibold">AI for Sustainable Living</span>
+            <span className="text-sm font-semibold">EcoPilot</span>
           </div>
           
           <div className="text-sm text-muted-foreground text-center">
-            
+            <p>Smart Industrial Sustainability Solutions</p>
             <p className="mt-1">K. Ramakrishnan College of Engineering</p>
           </div>
           
           <div className="text-sm text-muted-foreground">
-            © 2025 EcoAI. All rights reserved.
+            © 2025 EcoPilot. All rights reserved.
           </div>
         </div>
       </div>

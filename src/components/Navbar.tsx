@@ -9,9 +9,8 @@ const Navbar = () => {
 
   const navItems = [
     { path: "/", label: "Home" },
+    { path: "/industry", label: "Industry" },
     { path: "/about", label: "About" },
-    { path: "/insights", label: "AI Insights" },
-    { path: "/dashboard", label: "Dashboard" },
     { path: "/team", label: "Team" },
   ];
 
@@ -24,7 +23,7 @@ const Navbar = () => {
           <Link to="/" className="flex items-center gap-2 text-xl font-bold">
             <Leaf className="w-6 h-6 text-primary" />
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              EcoAI
+              EcoPilot
             </span>
           </Link>
 
