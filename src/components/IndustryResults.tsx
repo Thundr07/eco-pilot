@@ -6,6 +6,7 @@ import { ChevronDown, Lightbulb, Heart } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { api } from '@/lib/utils';
+import FormattedPolicy from './FormattedPolicy';
 
 interface IndustryResultsProps {
   results: any;
@@ -92,9 +93,7 @@ const IndustryResults = ({ results }: IndustryResultsProps) => {
             <CollapsibleContent>
               <CardContent>
                 <div className="prose prose-sm max-w-none">
-                  <p className="text-lg italic text-foreground/90 leading-relaxed">
-                    {results.cityNarrative}
-                  </p>
+                  <FormattedPolicy raw={results.cityNarrative} />
                 </div>
               </CardContent>
             </CollapsibleContent>
@@ -229,13 +228,7 @@ const IndustryResults = ({ results }: IndustryResultsProps) => {
             </CollapsibleTrigger>
             <CollapsibleContent>
               <CardContent>
-                <div className="space-y-4">
-                  <div className="prose prose-sm max-w-none">
-                    <div className="whitespace-pre-wrap text-sm bg-muted/50 p-4 rounded-lg">
-                      {results.policyRecommendations}
-                    </div>
-                  </div>
-                </div>
+                <FormattedPolicy raw={results.policyRecommendations} />
               </CardContent>
             </CollapsibleContent>
           </Collapsible>
@@ -248,9 +241,7 @@ const IndustryResults = ({ results }: IndustryResultsProps) => {
           <CardTitle>Sustainability Recommendations</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="prose prose-sm max-w-none">
-            <div className="whitespace-pre-wrap text-sm">{results.recommendations || 'No recommendations available.'}</div>
-          </div>
+          <FormattedPolicy raw={results.recommendations || 'No recommendations available.'} />
         </CardContent>
       </Card>
 

@@ -5,7 +5,6 @@ import IndustryMap from "@/components/IndustryMap";
 import IndustryMetricsForm from "@/components/IndustryMetricsForm";
 import IndustryResults from "@/components/IndustryResults";
 import { Card, CardContent } from "@/components/ui/card";
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/utils";
 import EcoChat from "@/components/EcoChat";

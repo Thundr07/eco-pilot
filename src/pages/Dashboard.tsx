@@ -6,11 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, TrendingUp, Droplet, Trash2, Car, Leaf, LogOut } from "lucide-react";
+import { Loader2, TrendingUp, Droplet, Trash2, Car, Leaf, LogOut, Factory, Cloud } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from "recharts";
 import { Card as UICard, CardHeader as UICardHeader, CardTitle as UICardTitle, CardContent as UICardContent } from "@/components/ui/card";
-import { Factory, Leaf, Cloud, Droplet } from "lucide-react";
 import { api } from "@/lib/utils";
+import FormattedPolicy from "@/components/FormattedPolicy";
 
 interface Assessment {
   id: string;
@@ -332,11 +332,7 @@ const Dashboard = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="prose prose-sm max-w-none">
-                    <div className="whitespace-pre-wrap text-muted-foreground">
-                      {selectedAssessment.recommendations?.analysis || "No recommendations available"}
-                    </div>
-                  </div>
+                  <FormattedPolicy raw={selectedAssessment.recommendations?.analysis || "No recommendations available"} />
                 </CardContent>
               </Card>
             )}
